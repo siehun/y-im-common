@@ -12,5 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TopicMessage implements DomainEventI {
+    /**
+     * 消息目的地 消息主题
+     */
     private String destination;
 }

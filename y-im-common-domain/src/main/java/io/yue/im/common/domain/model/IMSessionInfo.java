@@ -5,18 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 发送消息的用户
+ * session信息
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class IMUserInfo {
-
+@NoArgsConstructor
+public class IMSessionInfo {
     /**
      * 用户id
      */
     private Long userId;
-
     /**
      * 终端类型
      */

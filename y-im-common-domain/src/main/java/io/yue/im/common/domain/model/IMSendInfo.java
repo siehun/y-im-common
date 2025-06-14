@@ -5,20 +5,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 发送消息的用户
+ * 发送信息
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class IMUserInfo {
-
+@NoArgsConstructor
+public class IMSendInfo<T> {
     /**
-     * 用户id
+     * IMCType命令类型
      */
-    private Long userId;
-
+    private Integer cmd;
     /**
-     * 终端类型
+     * 推送信息的数据
      */
-    private Integer terminal;
+    private T data;
 }
