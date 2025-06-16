@@ -47,6 +47,25 @@ public class JwtUtils {
             return null;
         }
     }
+    /**
+     * 根据token获取用户数据
+     * @param token 用户登录token
+     * @return 用户数据
+     */
+    public static String getInfo(String token) {
+        try {
+            return JWT.decode(token).getClaim("info").asString();
+        }catch (JWTDecodeException e) {
+            return null;
+        }
+    }
+
+    /**
+     * token校验
+     * @param token 登录toekn
+     * @param secret 秘钥
+     * @return
+     */
     public static Boolean checkSign(String token, String secret) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
