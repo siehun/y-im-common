@@ -22,38 +22,56 @@
     </properties>
 
     <dependencies>
+
+        <!--Hutool（全能工具包）-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
-        <!--FastJson-->
+
+        <!--FastJson （阿里高性能JSON库）-->
+        <!--JSON与Java对象的快速转换-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
         </dependency>
+
+        <!-- Apache Commons Lang3-->
+        <!--扩展Java基础工具类（如字符串、数组、异常处理）-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <!--管理Bean的生命周期-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
         </dependency>
+
+        <!--模板引擎（Velocity）-->
+        <!--生成动态HTML、邮件模板、代码生成等-->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>${velocity.version}</version>
         </dependency>
+
+        <!--Jackson Joda-Time支持-->
+        <!--让Jackson支持Joda-Time日期类型的序列化-->
+        <!--与Spring Boot默认的Jackson配合处理复杂日期格式-->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+
+        <!--提供应用上下文、事件机制等核心功能-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
+
         <!-- 引入操作JWT的相关依赖 -->
         <dependency>
             <groupId>com.auth0</groupId>
@@ -61,17 +79,19 @@
             <version>${jwt.version}</version>
         </dependency>
 
+        <!-- cola 阿里巴巴开源的一款轻量级领域驱动设计（DDD）架构框架-->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>cola-core</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>cola-common</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <!--lombok依赖-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
