@@ -25,8 +25,8 @@ public class JwtUtils {
             Date date = new Date(System.currentTimeMillis() + exprieIn * 1000);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
-                    .withAudience(userId.toString())
-                    .withClaim("info", info)
+                    .withAudience(userId.toString()) // 标识该Token的目标接收者, 便于后续的权限校验，
+                    .withClaim("info", info) //  存储自定义用户信息
                     .withExpiresAt(date)
                     .sign(algorithm);
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class JwtUtils {
     }
 
     /**
-     * 根据token获取用户登录数据
+     * 根据token获取用户登录数据，其实就是拿到用户id
      * @param token 用户登录token
      * @return
      */
@@ -48,7 +48,7 @@ public class JwtUtils {
         }
     }
     /**
-     * 根据token获取用户数据
+     * 根据token获取用户数据,从Token的自定义Claim中提取用户信息
      * @param token 用户登录token
      * @return 用户数据
      */
@@ -70,7 +70,7 @@ public class JwtUtils {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm).build();
-            verifier.verify(token);
+            verifier.verify(token); // 验证签名和过期时间
             return true;
         } catch (JWTDecodeException e) {
             return false;
