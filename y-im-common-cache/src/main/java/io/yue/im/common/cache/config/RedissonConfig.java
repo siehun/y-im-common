@@ -20,15 +20,18 @@ import java.util.Arrays;
 @ConditionalOnProperty(name = "distribute.lock.type", havingValue = "redisson")
 public class RedissonConfig {
 
+
     @Value("${spring.redis.address}")
     private String redisAddress;
 
     @Value("${spring.redis.password}")
     private String password;
 
+    // Redis 数据库编号
     @Value("${spring.redis.database}")
     private int database;
 
+    // 单机 Redis 部署模式,也是这个项目使用的模式
     @Bean(name = "redissonClient")
     @ConditionalOnProperty(name = "redis.arrange.type", havingValue = "single")
     public RedissonClient singleRedissonClient() {

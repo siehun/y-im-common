@@ -40,10 +40,13 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class RedisPoolConfig {
 
+    // 定义了 默认的日期时间格式化规则，
+    // 用于后续 Redis 的 LocalDateTime、LocalDate、LocalTime 序列化和反序列化。
     private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
+    // 连接池参数
     @Value("${spring.redis.lettuce.pool.max-idle}")
     private int maxIdle;
     @Value("${spring.redis.lettuce.pool.min-idle}")
@@ -52,6 +55,7 @@ public class RedisPoolConfig {
     private int maxTotal;
     @Value("${spring.redis.lettuce.pool.max-wait}")
     private long maxWait;
+    // Redis 服务器参数
     @Value("${spring.redis.host}")
     private String host;
     @Value("${spring.redis.port}")
@@ -61,6 +65,7 @@ public class RedisPoolConfig {
     @Value("${spring.redis.database}")
     private int database;
 
+    // Redis 连接池配置
     @Bean
     public GenericObjectPoolConfig<Object> genericObjectPoolConfig() {
         GenericObjectPoolConfig<Object> poolConfig = new GenericObjectPoolConfig<>();
@@ -71,12 +76,14 @@ public class RedisPoolConfig {
         return poolConfig;
     }
 
+    // ClientResources：Lettuce 客户端资源管理器，用于管理线程池、事件循环等。
     @Bean(destroyMethod = "shutdown")
     @ConditionalOnMissingBean(ClientResources.class)
     public DefaultClientResources lettuceClientResources() {
         return DefaultClientResources.create();
     }
 
+    // Redis 单机模式配置
     @Bean
     public RedisStandaloneConfiguration redisSentinelConfiguration() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
@@ -87,11 +94,17 @@ public class RedisPoolConfig {
         return redisStandaloneConfiguration;
     }
 
+    // 构建 Lettuce 客户端配置：
+    // clientResources：设置客户端资源管理器
+    // poolConfig：设置连接池配置
     @Bean
     public LettuceClientConfiguration lettuceClientConfiguration(GenericObjectPoolConfig<Object> genericObjectPoolConfig, ClientResources lettuceClientResources) {
         return LettucePoolingClientConfiguration.builder().clientResources(lettuceClientResources).poolConfig(genericObjectPoolConfig).build();
     }
 
+    // 创建 Lettuce 连接工厂，用于管理 Redis 连接：
+    //传入 RedisStandaloneConfiguration（单机模式配置）
+    //传入 LettuceClientConfiguration（Lettuce 客户端配置）
     @Bean
     public LettuceConnectionFactory lettuceConnectionFactory(RedisStandaloneConfiguration redisSentinelConfiguration, LettuceClientConfiguration lettuceClientConfiguration) {
         return new LettuceConnectionFactory(redisSentinelConfiguration,lettuceClientConfiguration);
@@ -107,6 +120,11 @@ public class RedisPoolConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+
+        // 支持 Java 8 时间类型
+        //LocalDateTime → "yyyy-MM-dd HH:mm:ss"
+        //LocalDate → "yyyy-MM-dd"
+        //LocalTime → "HH:mm:ss"
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(LocalDateTime.class,new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)));
         simpleModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
@@ -115,15 +133,21 @@ public class RedisPoolConfig {
         simpleModule.addDeserializer(LocalDate.class,new LocalDateDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
         simpleModule.addDeserializer(LocalTime.class,new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
         objectMapper.registerModule(simpleModule);
+
         jsonRedisSerializer.setObjectMapper(objectMapper);
+        // Key 和 HashKey：使用 StringRedisSerializer
         redisTemplate.setKeySerializer(RedisSerializer.string());
         redisTemplate.setHashKeySerializer(RedisSerializer.string());
+        // Value 和 HashValue：使用 Jackson2JsonRedisSerializer（JSON 序列化
         redisTemplate.setValueSerializer(jsonRedisSerializer);
         redisTemplate.setHashValueSerializer(jsonRedisSerializer);
         redisTemplate.afterPropertiesSet();;
         return redisTemplate;
     }
 
+    // StringRedisTemplate：专用于字符串操作的 Redis 模板，
+    // 默认使用 StringRedisSerializer。
+    //适用于 纯字符串存储（如简单的键值对
     @Bean(name = "stringRedisTemplate")
     public StringRedisTemplate stringRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         // 重新初始化工厂
