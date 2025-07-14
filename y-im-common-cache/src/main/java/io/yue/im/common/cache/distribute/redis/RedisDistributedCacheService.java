@@ -25,11 +25,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * @author binghe(微信 : hacker_binghe)
- * @version 1.0.0
  * @description 基于Redis实现的分布式缓存，在满足分布式缓存的需求时，解决了缓存击穿、穿透和雪崩的问题
- * @github https://github.com/binghe001
- * @copyright 公众号: 冰河技术
  */
 @Component
 @ConditionalOnProperty(name = "distribute.cache.type", havingValue = "redis")
@@ -146,6 +142,7 @@ public class RedisDistributedCacheService implements DistributedCacheService {
         //缓存存在数据，直接返回
         if (StrUtil.isNotBlank(str)){
             //返回数据
+            // 这里要转一下类型
             return this.getResult(str, type);
         }
         //缓存中存储的是空字符串

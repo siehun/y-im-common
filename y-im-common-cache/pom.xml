@@ -22,6 +22,7 @@
 
     <dependencies>
 
+        <!--Protostuff 序列化库-->
         <dependency>
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-runtime</artifactId>
@@ -33,6 +34,7 @@
             <version>${protostuff.version}</version>
         </dependency>
 
+        <!--Spring Boot 基础依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

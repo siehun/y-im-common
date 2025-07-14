@@ -10,6 +10,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * 基于 Protostuff 库的序列化工具类
+ */
 public class ProtoStuffSerializerUtils {
     /**
      * 序列化对象
@@ -17,18 +20,24 @@ public class ProtoStuffSerializerUtils {
      * @return
      */
     public static <T> byte[] serialize(T obj) {
+        // 1. 校验非空
         if (obj == null) {
-            throw new RuntimeException("序列化对象(" + obj + ")!");
+            throw new RuntimeException("序列化对象(" + obj + ") 为空!");
         }
+        // 2. 获取对象的Schema
+        // Schema 是一个描述 Java 对象结构的元数据接口，定义了如何序列化和反序列化对象的规则
         @SuppressWarnings("unchecked")
         Schema<T> schema = (Schema<T>) RuntimeSchema.getSchema(obj.getClass());
+        // 3. 分配缓冲区（1MB）
         LinkedBuffer buffer = LinkedBuffer.allocate(1024 * 1024);
         byte[] protostuff = null;
         try {
+            // 4. 执行序列化
             protostuff = ProtostuffIOUtil.toByteArray(obj, schema, buffer);
         } catch (Exception e) {
             throw new RuntimeException("序列化(" + obj.getClass() + ")对象(" + obj + ")发生异常!", e);
         } finally {
+            // 5. 清理缓冲区
             buffer.clear();
         }
         return protostuff;
@@ -46,12 +55,14 @@ public class ProtoStuffSerializerUtils {
         }
         T instance = null;
         try {
+            // 创建目标对象实例（需无参构造器）
             instance = targetClass.newInstance();
         } catch (InstantiationException  e1) {
             throw new RuntimeException("反序列化过程中依据类型创建对象失败!", e1);
         } catch(IllegalAccessException e2){
             throw new RuntimeException("反序列化过程中依据类型创建对象失败!", e2);
         }
+        //反序列化填充对象
         Schema<T> schema = RuntimeSchema.getSchema(targetClass);
         ProtostuffIOUtil.mergeFrom(paramArrayOfByte, instance, schema);
         return instance;

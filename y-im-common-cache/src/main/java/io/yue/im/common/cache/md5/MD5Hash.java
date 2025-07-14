@@ -7,6 +7,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * 将输入字符串转换为 MD5 格式的哈希值
+ */
 @Slf4j
 public class MD5Hash {
     public static String md5Java(String message) {

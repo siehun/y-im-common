@@ -56,6 +56,8 @@ public class SnowFlake {
      */
     public synchronized long nextId() {
         long currStmp = getNewstmp();
+
+        // 时钟回拨
         if (currStmp < lastStmp) {
             throw new RuntimeException("Clock moved backwards.  Refusing to generate id");
         }

@@ -17,8 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(name = "message.mq.type", havingValue = "rocketmq")
 public class RocketMQMessageSenderServiceImpl implements MessageSenderService {
+
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
+
     @Override
     public boolean send(TopicMessage message) {
         try {

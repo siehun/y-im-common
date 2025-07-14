@@ -10,6 +10,7 @@ import java.util.Collection;
  * @description 类型转换
  */
 public class TypeConversion {
+
     public static <T> boolean isCollectionType(T t){
         return t instanceof Collection;
     }

@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class LocalGuavaCacheFactory {
 
     public static <K,V> Cache<K, V> getLocalCache() {
+        // 支持五个线程并发写入
         return CacheBuilder.newBuilder().initialCapacity(200).concurrencyLevel(5).expireAfterWrite(300, TimeUnit.SECONDS).build();
     }
 
